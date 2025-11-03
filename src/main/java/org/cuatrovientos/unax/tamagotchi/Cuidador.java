@@ -30,9 +30,34 @@ public class Cuidador {
 			tThread.start();
 		}
 		
-		// Bucle principal del cuidadro 
+		// Bucle principal del cuidador
+		
+		while (areAnyAlive()) {
+			
+			
+		}
 		
 		
+	}
+	private static void printMenu() {
+        System.out.println("\n--- ACCIONES DEL CUIDADOR ---");
+        System.out.println("1. Alimentar a un Tamagotchi");
+        System.out.println("2. Limpiar a un Tamagotchi");
+        System.out.println("3. Jugar con un Tamagotchi");
+        System.out.println("4. Matar a un Tamagotchi");
+        System.out.println("5. Ver estado de un Tamagotchi");
+        System.out.println("6. Salir (Abandonar)");
+        System.out.print("Elige una opción: ");
+    }		
+	
+	public static boolean areAnyAlive() {
+		for (Tamagotchi t: tamagotchiList) {
+			if(t.isAlive()) {
+				return true;
+			}
+			}
+		return false;
+		}
 	}
 
 }
