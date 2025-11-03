@@ -44,6 +44,8 @@ public class Tamagotchi implements Runnable {
 		}
 		System.out.println(name + "he muerto");
 	}
+	
+	//Funcion para actualizar la suciedad miramos hace cuanto a sido el último baño y si han sido más de 20000 añadimos un punto de suciedad
 	private void updateDirtiness() {
 		if(System.currentTimeMillis()- lastBathTime >20000) {
 			this.dirtiness ++;
@@ -58,6 +60,7 @@ public class Tamagotchi implements Runnable {
 		}
 	}
 	
+	//Función para chekear la vida que tiene el tamagotchi, si se acabo el tiempo se muere
 	private void checkLifeSpan() {
 		if (System.currentTimeMillis() - startTime > 300000) {
             System.out.println(name + ": Se acabó mi tiempo... adiós.");
@@ -96,6 +99,30 @@ public class Tamagotchi implements Runnable {
 		currentState = "IDLE";
 		
 	}
+	
+	//Función para matar al tamagotchi primero nos aseguramos de que este libre y ponemos la vaiable se vivo en false
+	public void kill () {
+		if (currentState == "IDLE") {
+            System.out.println(name + ": El cuidador me ha mandado a dormir...");
+            isAlive = false; 
+            // Si el hilo está en Thread.sleep(1000) en el run(),
+            // necesitamos un Thread.interrupt() desde el cuidador para despertarlo
+            // y que pueda terminar su bucle 'while(isAlive)'.
+        } else {
+            System.out.println(name + ": ¡No puedes matarme! Estoy ocupado (" + currentState + ")");
+        }
+	}
+	
+	//Funcion para devolver el estado devolvemos los parametros en un String 
+	public String getStatus() {
+		if (!isAlive) {
+			return name+ " (Muerto) ";
+		}
+		
+		return "Tiempo" + (System.currentTimeMillis() - startTime) / 1000+ " Suciedad"+ dirtiness + " Estado: "+ currentState;
+	}
+	
+	
 	
 
 }
