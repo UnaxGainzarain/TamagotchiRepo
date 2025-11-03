@@ -1,13 +1,15 @@
 package org.cuatrovientos.unax.tamagotchi;
 
 import java.util.Random;
+import java.util.Scanner;
 
 public class Tamagotchi implements Runnable {
-	private String name;
+	Scanner sc = new Scanner(System.in);	private String name;
 	private int eatSpeed;
 	private boolean isAlive = true;
 	private String currentState = "IDLE";
 	private Random rand;
+	String leer;
 	
 	private long startTime = System.currentTimeMillis();
 	private int dirtiness =0;
@@ -63,8 +65,38 @@ public class Tamagotchi implements Runnable {
         }
 	}
 	
-	private void play() {
+	public void play(Scanner sc) {
+		// Nos aseguramos de que el tamagotchi esté en reposo y vivo para poner jujar
+		if (!currentState.equals("IDLE") || !isAlive) {
+			System.out.println(name + "No me puedo jugar por que estoy muerto");
+			return;
+		}
+		currentState ="PLAYING";
+		rand = new Random();
+		int n1 = rand.nextInt(5);
+		int n2 = rand.nextInt(5);
+		int result = n1 +n2;
+		boolean answeredCorrectly = false; 
+		while (!answeredCorrectly) {
+			System.out.println(name +": Cual es la suma entre " +n1+ "+"+n2);
+			leer = sc.nextLine();
+			//Intentamos leer la suma del usuario por consola y si no es númerico controlamos excepcion
+			try {
+			int resultUser = Integer.parseInt(leer);
+			if (resultUser == result) {
+				System.out.println("Correcto que bien juegas makina");
+			}else {
+				System.out.println("Incorrecto sigue jugando");
+			}
+			}catch (Exception e) {
+				System.out.println("No has introducido un número");
+			}
+			sc.nextLine();
+		}
+		currentState = "IDLE";
 		
 	}
+	
+
 }
 
