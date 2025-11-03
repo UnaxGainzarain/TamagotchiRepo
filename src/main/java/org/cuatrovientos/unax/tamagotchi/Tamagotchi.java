@@ -122,8 +122,9 @@ public class Tamagotchi implements Runnable {
 		return "Tiempo" + (System.currentTimeMillis() - startTime) / 1000+ " Suciedad"+ dirtiness + " Estado: "+ currentState;
 	}
 	
-	
-	
+	// Getters 
+	public boolean isAlive() { return isAlive; }
+    public String getTamagotchiName() { return name; }
 
 }
 
