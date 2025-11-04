@@ -25,15 +25,23 @@ public class Cuidador {
 			
 			Tamagotchi t = new Tamagotchi("Tama-" + i, eatSpeed);
 			tamagotchiList.add(t);
+			
 			Thread tThread = new Thread(t);
 			threadList.add(tThread);
+			
 			tThread.start();
 		}
 		
 		// Bucle principal del cuidador
 		
 		while (areAnyAlive()) {
+			printMenu();
+			leer = sc.nextLine();
+			int choice = Integer.parseInt(leer);
 			
+			if(choice==6) break;
+			
+			Tamagotchi target = selectTamagotchi(sc);
 			
 		}
 		
@@ -58,6 +66,24 @@ public class Cuidador {
 			}
 		return false;
 		}
+	
+
+	public static Tamagotchi selectTamagotchi(Scanner sc) {
+		String leer="";
+		System.out.println("Qur tamagotchi quieres elegir?");
+		for (int i =0;i<tamagotchiList.size();i++) {
+			if(tamagotchiList.get(i).isAlive()) {
+				System.out.println(tamagotchiList.get(i).getTamagotchiName());
+			}
+		}
+		System.out.println("Introduce el número de tamagotchi que quieres");
+		leer = sc.nextLine();
+		int choice = Integer.parseInt(leer);
+		if(choice > tamagotchiList.size()) {
+			System.out.println("No has seleccionado una opción correcta");
+			return null;
+		}
+		return tamagotchiList.get(choice);
 	}
 
 }
