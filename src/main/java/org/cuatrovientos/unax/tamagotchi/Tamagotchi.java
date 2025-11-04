@@ -1,5 +1,6 @@
 package org.cuatrovientos.unax.tamagotchi;
 
+import java.util.Objects;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -68,6 +69,21 @@ public class Tamagotchi implements Runnable {
         }
 	}
 	
+	public synchronized void feed() {
+        if (currentState != "IDLE" || !isAlive) {
+            System.out.println(name + ": No puedo comer ahora.");
+            return;
+        }
+        
+        currentState = "EATING";
+        System.out.println(name + ": ¡Empiezo a comer!");
+        try {
+            Thread.sleep(eatSpeed); // Cada uno come a su ritmo
+        } catch (InterruptedException e) { /* ... */ }
+        System.out.println(name + ": ¡Terminé de comer!");
+        currentState = "IDLE";
+    }
+	
 	public void play(Scanner sc) {
 		// Nos aseguramos de que el tamagotchi esté en reposo y vivo para poner jujar
 		if (!currentState.equals("IDLE") || !isAlive) {
@@ -125,6 +141,28 @@ public class Tamagotchi implements Runnable {
 	// Getters 
 	public boolean isAlive() { return isAlive; }
     public String getTamagotchiName() { return name; }
+
+
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name);
+	}
+
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Tamagotchi other = (Tamagotchi) obj;
+		return Objects.equals(name, other.name);
+	}
+    
 
 }
 
