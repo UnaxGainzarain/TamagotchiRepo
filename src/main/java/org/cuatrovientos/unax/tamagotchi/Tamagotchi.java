@@ -129,6 +129,25 @@ public class Tamagotchi implements Runnable {
         }
 	}
 	
+	//Función para lavar al tamagotchi nos aseguramos de que este libre y vivo lo ponemos en estado de lavando y detenemos el hilo durante 5 segundos
+	public  void clean() {
+        if (currentState != "IDLE" || !isAlive) {
+            System.out.println(name + ": No me puedo limpiar ahora.");
+            return;
+        }
+
+        currentState = "CLEANING";
+        System.out.println(name + ": Tomando un baño...");
+        try {
+            Thread.sleep(5000); 
+        } catch (InterruptedException e) { /* ... */ }
+        
+        this.dirtiness = 0;
+        this.lastBathTime = System.currentTimeMillis(); 
+        System.out.println(name + ": ¡Estoy limpio! [Suciedad: 0]");
+        currentState = "IDLE";
+    }
+	
 	//Funcion para devolver el estado devolvemos los parametros en un String 
 	public String getStatus() {
 		if (!isAlive) {
