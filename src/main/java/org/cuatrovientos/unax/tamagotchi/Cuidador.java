@@ -15,113 +15,112 @@ public class Cuidador {
 		Random rand = new Random();
 		String leer;
 		int eatSpeed = 1;
-		
+
 		System.out.println("¿Cuántos Tamagotchis quieres cuidar (X)?");
-        int numTamagotchis = 0;
-        try {
-            leer = sc.nextLine();
-            numTamagotchis = Integer.parseInt(leer);
-            if (numTamagotchis <= 0) {
-                 System.out.println("Debes crear al menos uno.");
-                 sc.close();
-                 return; // Salir
-            }
-        } catch (NumberFormatException e) {
-            System.out.println("Número inválido. Saliendo.");
-            sc.close();
-            return; // Salir
-        }
+		int numTamagotchis = 0;
+		try {
+			leer = sc.nextLine();
+			numTamagotchis = Integer.parseInt(leer);
+			if (numTamagotchis <= 0) {
+				System.out.println("Debes crear al menos uno.");
+				sc.close();
+				return; // Salir
+			}
+		} catch (NumberFormatException e) {
+			System.out.println("Número inválido. Saliendo.");
+			sc.close();
+			return; // Salir
+		}
 
-        // (R1) "Por lo tanto al arrancarse deberá ponerles las pilas y lanzarlos"
-        for (int i = 0; i < numTamagotchis; i++) {
-            System.out.println("--- Creando Tamagotchi " + (i + 1) + "/" + numTamagotchis + " ---");
-             eatSpeed = rand.nextInt(5001) + 3000;
-            
-            System.out.println("Indica el nombre del Tamagotchi:");
-            String nombre = sc.nextLine();
-            
-            // Comprobamos si el nombre existe
-            boolean existe = false;
-            for (Tamagotchi t : tamagotchiList) {
-                if (t.getTamagotchiName().equals(nombre)) {
-                    existe = true;
-                    break;
-                }
-            }
+		// (R1) "Por lo tanto al arrancarse deberá ponerles las pilas y lanzarlos"
+		for (int i = 0; i < numTamagotchis; i++) {
+			System.out.println("--- Creando Tamagotchi " + (i + 1) + "/" + numTamagotchis + " ---");
+			eatSpeed = rand.nextInt(5001) + 3000;
 
-            if (existe) {
-                System.out.println("El nombre está ocupado. Inténtalo de nuevo.");
-                i--; // <<< Importante: Repite esta iteración
-                continue; // <<< Salta al siguiente ciclo del 'for'
-            }
+			System.out.println("Indica el nombre del Tamagotchi:");
+			String nombre = sc.nextLine();
 
-            // Si no existe, lo creamos y lanzamos
-            Tamagotchi t = new Tamagotchi(nombre, eatSpeed);
-            Thread tThread = new Thread(t);
-            tThread.setName(nombre); // VINCULAMOS POR NOMBRE (para la func. kill)
+			// Comprobamos si el nombre existe
+			boolean existe = false;
+			for (Tamagotchi t : tamagotchiList) {
+				if (t.getTamagotchiName().equals(nombre)) {
+					existe = true;
+					break;
+				}
+			}
 
-            tamagotchiList.add(t);
-            threadList.add(tThread);
-            
-            tThread.start(); // ¡Lanzado al mundo!
-            System.out.println(nombre + " ha sido lanzado al mundo.");
-        }
+			if (existe) {
+				System.out.println("El nombre está ocupado. Inténtalo de nuevo.");
+				i--; // <<< Importante: Repite esta iteración
+				continue; // <<< Salta al siguiente ciclo del 'for'
+			}
 
-        System.out.println("\n--- ¡Todos los Tamagotchis están vivos! ---");
-        
-        while (areAnyAlive()) {
-            printMenu(); // Esta es la función del menú de ACCIONES
-            
-            int choice = 0;
-            try {
-                leer = sc.nextLine();
-                choice = Integer.parseInt(leer);
-            } catch (NumberFormatException e) {
-                System.out.println("Error: Debes introducir un número.");
-                continue; // Vuelve a mostrar el menú de acciones
-            }
+			// Si no existe, lo creamos y lanzamos
+			Tamagotchi t = new Tamagotchi(nombre, eatSpeed);
+			Thread tThread = new Thread(t);
+			tThread.setName(nombre); // VINCULAMOS POR NOMBRE (para la func. kill)
 
-            if (choice == 6) {
-                System.out.println("Abandonando a los Tamagotchis...");
-                break; // Sale del 'while (areAnyAlive())'
-            }
+			tamagotchiList.add(t);
+			threadList.add(tThread);
 
-            Tamagotchi target = selectTamagotchi(sc);
-            if (target == null) continue; // Si la selección falla, vuelve al menú
+			tThread.start(); // ¡Lanzado al mundo!
+			System.out.println(nombre + " ha sido lanzado al mundo.");
+		}
 
-            // El switch de acciones
-            switch (choice) {
-                case 1:
-                	target.feed(); 
-                	break;
-                case 2:
-                	target.clean();
-                	break;
-                case 3:
-                	target.play(sc);
-                	break;
-                case 4:
-                	killTamagotchi(target);
-                	break;
-                case 5:
-                	System.out.println(target.getStatus()); 
-                	break;
-                default: 
-                	System.out.println("Opción no válida."); 
-                	break;
-            }
-        }
-        
-        // Fin del juego
-        System.out.println("Todos tus Tamagotchis han muerto o has abandonado.");
-        System.out.println("Interrumpiendo hilos restantes...");
-        for (Thread t : threadList) {
-            t.interrupt();
-        }
-        sc.close();
-    }
+		System.out.println("\n--- ¡Todos los Tamagotchis están vivos! ---");
 
-	
+		while (areAnyAlive()) {
+			printMenu(); // Esta es la función del menú de ACCIONES
+
+			int choice = 0;
+			try {
+				leer = sc.nextLine();
+				choice = Integer.parseInt(leer);
+			} catch (NumberFormatException e) {
+				System.out.println("Error: Debes introducir un número.");
+				continue; // Vuelve a mostrar el menú de acciones
+			}
+
+			if (choice == 6) {
+				System.out.println("Abandonando a los Tamagotchis...");
+				break; // Sale del 'while (areAnyAlive())'
+			}
+
+			Tamagotchi target = selectTamagotchi(sc);
+			if (target == null)
+				continue; // Si la selección falla, vuelve al menú
+
+			// El switch de acciones
+			switch (choice) {
+			case 1:
+				target.feed();
+				break;
+			case 2:
+				target.clean();
+				break;
+			case 3:
+				target.play(sc);
+				break;
+			case 4:
+				killTamagotchi(target);
+				break;
+			case 5:
+				System.out.println(target.getStatus());
+				break;
+			default:
+				System.out.println("Opción no válida.");
+				break;
+			}
+		}
+
+		// Fin del juego
+		System.out.println("Todos tus Tamagotchis han muerto o has abandonado.");
+		System.out.println("Interrumpiendo hilos restantes...");
+		for (Thread t : threadList) {
+			t.interrupt();
+		}
+		sc.close();
+	}
 
 	// Función imprimir lista principal
 	private static void printMainMenu() {
@@ -160,34 +159,36 @@ public class Cuidador {
 		System.out.println("Que tamagotchi quieres elegir?");
 		for (int i = 0; i < tamagotchiList.size(); i++) {
 			if (tamagotchiList.get(i).isAlive()) {
-				System.out.println((i + 1) + ". " + tamagotchiList.get(i).getTamagotchiName());			}
+				System.out.println((i + 1) + ". " + tamagotchiList.get(i).getTamagotchiName());
+			}
 		}
 		System.out.println("Introduce el número de tamagotchi que quieres");
-		int choice =0;
+		int choice = 0;
 		try {
 			leer = sc.nextLine();
 			choice = Integer.parseInt(leer);
-		}catch (NumberFormatException e) {
+		} catch (NumberFormatException e) {
 			System.out.println("Has itroducido un número incorrecto");
-		    e.toString();
+			e.toString();
 		}
-		
-		if (choice > tamagotchiList.size() || choice <=0) {
+
+		if (choice > tamagotchiList.size() || choice <= 0) {
 			System.out.println("No has seleccionado una opción correcta");
 			return null;
 		}
-		return tamagotchiList.get(choice -1);
+		return tamagotchiList.get(choice - 1);
 	}
-	
-	// Función para mata tamagotchi elegido primero ejecutamos el método kill despues finalizamos el hilo que corresponde a ese tamagotchi
+
+	// Función para mata tamagotchi elegido primero ejecutamos el método kill
+	// despues finalizamos el hilo que corresponde a ese tamagotchi
 	private static void killTamagotchi(Tamagotchi t) {
 		t.kill();
 		if (!t.isAlive()) {
-            // Buscamos el HILO correspondiente a ese Tamagotchi
-            int index = tamagotchiList.indexOf(t);
-            //Rompemos el hilo correspondiente
-            threadList.get(index).interrupt();
-        }
+			// Buscamos el HILO correspondiente a ese Tamagotchi
+			int index = tamagotchiList.indexOf(t);
+			// Rompemos el hilo correspondiente
+			threadList.get(index).interrupt();
+		}
 	}
 
 }
