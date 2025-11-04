@@ -184,11 +184,20 @@ public class Cuidador {
 	private static void killTamagotchi(Tamagotchi t) {
 		t.kill();
 		if (!t.isAlive()) {
-			// Buscamos el HILO correspondiente a ese Tamagotchi
-			int index = tamagotchiList.indexOf(t);
-			// Rompemos el hilo correspondiente
-			threadList.get(index).interrupt();
-		}
-	}
+			Thread threadToKill = null;
 
+			//Buscamos el hilo que se quiere matar pos su nombre
+			for (Thread th : threadList) {
+				if (th.getName().equals(t.getTamagotchiName())) {
+					threadToKill = th;
+					break;
+				}
+			}
+			if (threadToKill != null) {
+				// Interrunpimos el hilo
+	            threadToKill.interrupt();
+	        }
+		}
+
+	}
 }
